@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Generator for Roblox Lua Script</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .key-display {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            word-break: break-all;
+            color: #495057;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .control-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+
+        .history {
+            margin-top: 25px;
+            text-align: left;
+        }
+
+        .history h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        #keyHistory {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            background: #f8f9fa;
+        }
+
+        .history-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #e9ecef;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .control-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            input[type="number"] {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔑 Key Generator for Roblox Lua</h1>
+        <p class="description">Tạo key ngẫu nhiên để sử dụng trong script Lua của Roblox. Key có thể được dùng để xác thực, kích hoạt tính năng, hoặc bảo vệ script của bạn.</p>
+        
+        <div class="key-display" id="keyDisplay">Nhấn "Tạo Key" để bắt đầu</div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="keyLength">Độ dài key:</label>
+                <input type="number" id="keyLength" min="8" max="64" value="16">
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="useUppercase" checked>
+                <label for="useUppercase">Bao gồm chữ hoa (A-Z)</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="useLowercase" checked>
+                <label for="useLowercase">Bao gồm chữ thường (a-z)</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="useNumbers" checked>
+                <label for="useNumbers">Bao gồm số (0-9)</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="useSymbols">
+                <label for="useSymbols">Bao gồm ký tự đặc biệt (!@#$%^&*)</label>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button id="generateBtn">Tạo Key</button>
+            <button id="copyBtn" class="copy-btn">Sao chép</button>
+            <button id="clearHistoryBtn">Xóa lịch sử</button>
+        </div>
+        
+        <div class="history">
+            <h3>Lịch sử Key:</h3>
+            <div id="keyHistory"></div>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">Đã sao chép vào clipboard!</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const keyDisplay = document.getElementById('keyDisplay');
+            const generateBtn = document.getElementById('generateBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+            const keyHistory = document.getElementById('keyHistory');
+            const notification = document.getElementById('notification');
+            
+            const keyLengthInput = document.getElementById('keyLength');
+            const useUppercase = document.getElementById('useUppercase');
+            const useLowercase = document.getElementById('useLowercase');
+            const useNumbers = document.getElementById('useNumbers');
+            const useSymbols = document.getElementById('useSymbols');
+            
+            // Tải lịch sử từ localStorage
+            loadKeyHistory();
+            
+            generateBtn.addEventListener('click', generateKey);
+            copyBtn.addEventListener('click', copyToClipboard);
+            clearHistoryBtn.addEventListener('click', clearHistory);
+            
+            function generateKey() {
+                const length = parseInt(keyLengthInput.value);
+                const uppercase = useUppercase.checked;
+                const lowercase = useLowercase.checked;
+                const numbers = useNumbers.checked;
+                const symbols = useSymbols.checked;
+                
+                if (length < 8 || length > 64) {
+                    alert('Độ dài key phải từ 8 đến 64 ký tự!');
+                    return;
+                }
+                
+                if (!uppercase && !lowercase && !numbers && !symbols) {
+                    alert('Vui lòng chọn ít nhất một loại ký tự!');
+                    return;
+                }
+                
+                const key = createRandomKey(length, uppercase, lowercase, numbers, symbols);
+                keyDisplay.textContent = key;
+                
+                // Lưu vào lịch sử
+                saveToHistory(key);
+            }
+            
+            function createRandomKey(length, uppercase, lowercase, numbers, symbols) {
+                let charset = '';
+                let key = '';
+                
+                if (uppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                if (lowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
+                if (numbers) charset += '0123456789';
+                if (symbols) charset += '!@#$%^&*';
+                
+                for (let i = 0; i < length; i++) {
+                    const randomIndex = Math.floor(Math.random() * charset.length);
+                    key += charset[randomIndex];
+                }
+                
+                return key;
+            }
+            
+            function copyToClipboard() {
+                const key = keyDisplay.textContent;
+                
+                if (key === 'Nhấn "Tạo Key" để bắt đầu') {
+                    alert('Vui lòng tạo key trước khi sao chép!');
+                    return;
+                }
+                
+                navigator.clipboard.writeText(key).then(() => {
+                    showNotification();
+                }).catch(err => {
+                    console.error('Lỗi khi sao chép: ', err);
+                    alert('Không thể sao chép vào clipboard!');
+                });
+            }
+            
+            function showNotification() {
+                notification.classList.add('show');
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 2000);
+            }
+            
+            function saveToHistory(key) {
+                let history = JSON.parse(localStorage.getItem('keyHistory') || '[]');
+                history.unshift({
+                    key: key,
+                    timestamp: new Date().toLocaleString('vi-VN')
+                });
+                
+                // Giới hạn lịch sử 20 mục
+                if (history.length > 20) {
+                    history = history.slice(0, 20);
+                }
+                
+                localStorage.setItem('keyHistory', JSON.stringify(history));
+                loadKeyHistory();
+            }
+            
+            function loadKeyHistory() {
+                const history = JSON.parse(localStorage.getItem('keyHistory') || '[]');
+                keyHistory.innerHTML = '';
+                
+                if (history.length === 0) {
+                    keyHistory.innerHTML = '<div class="history-item">Chưa có key nào được tạo</div>';
+                    return;
+                }
+                
+                history.forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    historyItem.innerHTML = `<strong>${item.key}</strong> - <em>${item.timestamp}</em>`;
+                    keyHistory.appendChild(historyItem);
+                });
+            }
+            
+            function clearHistory() {
+                if (confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử?')) {
+                    localStorage.removeItem('keyHistory');
+                    loadKeyHistory();
+                }
+            }
+            
+            // Tạo key đầu tiên khi tải trang
+            generateKey();
+        });
+    </script>
+</body>
+</html>
